@@ -56,10 +56,54 @@ Just like with a grayscale image, we also have a sliding window with a stride le
 
 ![](images/04.png)
 
-The end result is an image that has a width and height that are half the size, but with the same depth.
+The end result is an image that has a width and height that are half the size, but with the same depth (number of color layers).
 
-### Colab Example
-The Colab example is available here: https://colab.research.google.com/github/tensorflow/examples/blob/master/courses/udacity_intro_to_tensorflow_for_deep_learning/l05c01_dogs_vs_cats_without_augmentation.ipynb
+#### Colab Example
+The Colab example is [Dogs vs Cats Image Classification without Image Augmentation](https://colab.research.google.com/github/tensorflow/examples/blob/master/courses/udacity_intro_to_tensorflow_for_deep_learning/l05c01_dogs_vs_cats_without_augmentation.ipynb).
+
+#### Using Sigmoid instead of Softmax for Classification
+We've been doing our final classification step using a Softmax layer:
+```
+     tf.keras.layers.Dense(2, activation='softmax')
+```
+
+It's also possible to instead use a **sigmoid** activation layer for classification:
+```
+     tf.keras.layers.Dense(1, activation='sigmoid')
+```
+
+If we change to a sigmoid activation function for our classifier, we also must change the `loss` parameter in the model.compile() method from `sparse_categorical_crossentropy` to `binary_crossentropy`, as shown below:
+
+```
+model.compile(optimizer='adam', 
+              loss='binary_crossentropy',
+              metrics=['accuracy'])
+```
+
+#### Using Training / Validation / Test to Avoid Overfitting
+Note that in our Colab example, we saw that we were *overtraining* our model.  This caused the model to have extremely high accuracy for the training set, but lower accuracy for the training data set.  This is known as *overfitting*.
+
+![](images/05.png)
+
+Essentially, the model is memorizing the training dataset, rather than producing a model of input to output.  As mentioned earlier, we can prevent this situation by breaking out data into three different datasets: training, validation, and test.
+
+![](images/06.png)
+
+This prevents the model from becoming tuned for *both* the training dataset *and* the validation dataset.
+
+#### Using Image Augmentation
+Often times we won't have a large training dataset.  In such situations, one possible solution is to perform image augmentations to increase the dataset size and improve model accuracy:
+
+![](images/07.png)
+
+#### Using Dropout to Improve Accuracy
+It's also fairly common for select neurons to develop very heavy influence upon the model, because they have much higher weights:
+
+![](images/08.png)
+
+One way to intentionally train the under-utilized neurons is to occasionally turn off certain neurons.  This is known as *dropout*:
+
+![](images/09.png)
 
 ### Next steps
 

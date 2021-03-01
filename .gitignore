@@ -1,0 +1,6 @@
+*.pyc
+
+poetry.lock
+
+foo.png
+machine_learning_04/data/cats_and_dogs_filtered.zip
