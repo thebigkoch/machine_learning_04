@@ -105,6 +105,55 @@ One way to intentionally train the under-utilized neurons is to occasionally tur
 
 ![](images/09.png)
 
+#### Revisiting the Colab
+Now that we know about image augmentation and dropout, we revisit the Colab [Dogs vs Cats Image Classification without Image Augmentation](https://colab.research.google.com/github/tensorflow/examples/blob/master/courses/udacity_intro_to_tensorflow_for_deep_learning/l05c02_dogs_vs_cats_with_augmentation.ipynb)
+
+Especially noteworthy details:
+1. Image augmentation is handled by adding parameters to our `ImageDataGenerator` object.  For example:
+    ```
+    from tensorflow.keras.preprocessing.image import ImageDataGenerator
+    image_gen = ImageDataGenerator(rescale=1./255, horizontal_flip=True)
+    ...
+    image_gen = ImageDataGenerator(rescale=1./255, rotation_range=45)
+    ...
+    image_gen = ImageDataGenerator(rescale=1./255, zoom_range=0.5)
+    ...
+    image_gen = ImageDataGenerator(
+      rescale=1./255,
+      rotation_range=40,
+      width_shift_range=0.2,
+      height_shift_range=0.2,
+      shear_range=0.2,
+      zoom_range=0.2,
+      horizontal_flip=True,
+      fill_mode='nearest')
+    ```
+
+    Note that image augmentation is only performed to the *training* data, not the *validation* data.  This is because the original images are likely representative of the sort data that the model will need to manage.
+    
+2. Dropout is handled with a `Dropout` layer in our `keras` model:
+    ```
+    model = tf.keras.models.Sequential([
+      tf.keras.layers.Conv2D(32, (3,3), activation='relu', input_shape=(150, 150, 3)),
+      tf.keras.layers.MaxPooling2D(2, 2),
+
+      tf.keras.layers.Conv2D(64, (3,3), activation='relu'),
+      tf.keras.layers.MaxPooling2D(2,2),
+
+      tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+      tf.keras.layers.MaxPooling2D(2,2),
+
+      tf.keras.layers.Conv2D(128, (3,3), activation='relu'),
+      tf.keras.layers.MaxPooling2D(2,2),
+
+      tf.keras.layers.Dropout(0.5),
+      tf.keras.layers.Flatten(),
+      tf.keras.layers.Dense(512, activation='relu'),
+      tf.keras.layers.Dense(2)
+    ])
+    ```
+    In this example, the dropout probability of 0.5. This means that 50% of the values coming into the Dropout layer will be set to zero. This helps to prevent overfitting.
+
 ### Next steps
 
 ## Sample Code
@@ -122,5 +171,8 @@ One way to intentionally train the under-utilized neurons is to occasionally tur
 To setup the virtual environment, run:
   > `poetry install`
 
-To execute the sample code, run:
-  > `poetry run main`
+To execute the Colab example *without* image augmentation and dropout, run:
+  > `poetry run without`
+
+To execute the Colab example *with* image augmentation and dropout, run:
+  > `poetry run with`

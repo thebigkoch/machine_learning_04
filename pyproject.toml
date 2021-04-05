@@ -13,7 +13,8 @@ matplotlib = "^3.3.4"
 [tool.poetry.dev-dependencies]
 
 [tool.poetry.scripts]
-main = "machine_learning_04.main:main"
+without = "machine_learning_04.example_without_augmentation:main"
+with = "machine_learning_04.example_with_augmentation:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
